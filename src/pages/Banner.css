@@ -1,0 +1,89 @@
+.premium-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 10%;
+  min-height: 70vh;
+  background: linear-gradient(
+    135deg,
+    #ffe4f0,
+    #ffd3ea,
+    #ffb8d8
+  );
+  animation: pinkGrad 6s ease-in-out infinite alternate;
+  position: relative;
+}
+
+@keyframes pinkGrad {
+  0%   { background: linear-gradient(135deg, #ffe4f0, #ffd3ea); }
+  100% { background: linear-gradient(135deg, #ffd3ea, #ffbfdc); }
+}
+
+/* Glass Card */
+.premium-glass {
+  padding: 40px 50px;
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 550px;
+}
+
+/* Texts */
+.banner-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #831843;
+  line-height: 1.2;
+}
+
+.banner-title span {
+  color: #be185d;
+}
+
+.banner-sub {
+  margin-top: 15px;
+  color: #9d174d;
+  font-size: 18px;
+}
+
+.banner-btn {
+  margin-top: 28px;
+  padding: 14px 32px;
+  background: #ec4899;
+  border: none;
+  color: white;
+  font-size: 17px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Minimal illustration on right side */
+.banner-illustration {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+
+.circle {
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  backdrop-filter: blur(10px);
+}
+
+/* 3 bars as income-expense visualization */
+.bar {
+  position: absolute;
+  width: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.bar1 { height: 140px; left: 10px; bottom: 0; }
+.bar2 { height: 100px; left: 65px; bottom: 0; }
+.bar3 { height: 160px; left: 120px; bottom: 0; }
