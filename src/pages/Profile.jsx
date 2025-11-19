@@ -1,8 +1,10 @@
 import React, { use, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
+import useTheme from "../pages/useTheme";
 
 const Profile = () => {
+  const { theme } = useTheme(); // ⬅ dark/light mode
   const { user, updateUser, setUser } = use(AuthContext);
 
   const [name, setName] = useState(user?.displayName || "");
@@ -14,7 +16,6 @@ const Profile = () => {
       photoURL: photo,
     })
       .then(() => {
-        // UI Update
         setUser({ ...user, displayName: name, photoURL: photo });
 
         Swal.fire({
@@ -35,13 +36,15 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center 
-        bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
-
-      <div className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-xl 
-        max-w-md w-full border border-white/50">
-
-        <h1 className="text-3xl font-bold text-center text-purple-700 mb-6">
+    <div
+      className={`min-h-screen flex items-center justify-center p-6 transition-colors duration-500
+        ${theme === "dark" ? "bg-gray-900 text-gray-200" : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-800"}`}
+    >
+      <div
+        className={`p-8 rounded-3xl shadow-xl max-w-md w-full border transition-colors duration-500
+          ${theme === "dark" ? "bg-gray-800/80 border-gray-700" : "bg-white/80 border-white/50 backdrop-blur-xl"}`}
+      >
+        <h1 className={`text-3xl font-bold text-center mb-6 ${theme === "dark" ? "text-purple-400" : "text-purple-700"}`}>
           My Profile
         </h1>
 
@@ -56,10 +59,11 @@ const Profile = () => {
 
         {/* Name */}
         <div className="mb-4">
-          <label className="font-semibold text-gray-700">Name</label>
+          <label className={`font-semibold ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>Name</label>
           <input
             type="text"
-            className="w-full mt-1 p-3 border rounded-xl bg-white shadow-sm"
+            className={`w-full mt-1 p-3 rounded-xl shadow-sm border transition-colors duration-500
+              ${theme === "dark" ? "bg-gray-700 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}`}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -67,10 +71,11 @@ const Profile = () => {
 
         {/* Photo URL */}
         <div className="mb-4">
-          <label className="font-semibold text-gray-700">Photo URL</label>
+          <label className={`font-semibold ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>Photo URL</label>
           <input
             type="text"
-            className="w-full mt-1 p-3 border rounded-xl bg-white shadow-sm"
+            className={`w-full mt-1 p-3 rounded-xl shadow-sm border transition-colors duration-500
+              ${theme === "dark" ? "bg-gray-700 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}`}
             value={photo}
             onChange={(e) => setPhoto(e.target.value)}
           />
@@ -78,20 +83,21 @@ const Profile = () => {
 
         {/* Email (Read Only) */}
         <div className="mb-4">
-          <label className="font-semibold text-gray-700">Email</label>
+          <label className={`font-semibold ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>Email</label>
           <input
             type="email"
-            className="w-full mt-1 p-3 border rounded-xl bg-gray-100"
             value={user?.email}
             readOnly
+            className={`w-full mt-1 p-3 rounded-xl border transition-colors duration-500
+              ${theme === "dark" ? "bg-gray-700 text-gray-200 border-gray-600" : "bg-gray-100 text-gray-800 border-gray-300"}`}
           />
         </div>
 
         {/* Update Button */}
         <button
           onClick={handleUpdate}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white 
-          py-3 rounded-xl font-semibold shadow-md mt-4"
+          className={`w-full py-3 rounded-xl font-semibold shadow-md mt-4 transition-colors duration-500
+            ${theme === "dark" ? "bg-purple-600 hover:bg-purple-500 text-white" : "bg-purple-600 hover:bg-purple-700 text-white"}`}
         >
           Update Profile
         </button>

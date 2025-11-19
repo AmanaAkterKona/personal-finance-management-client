@@ -25,10 +25,10 @@ const MyTransactions = () => {
 
   // ----------- Category Icons ----------- //
   const categoryIcons = {
-    salary: <FaMoneyBillWave className="text-green-600" />,
-    food: <FaUtensils className="text-pink-500" />,
-    shopping: <FaShoppingCart className="text-purple-600" />,
-    transport: <FaCar className="text-blue-600" />,
+    salary: <FaMoneyBillWave className="text-green-600 dark:text-green-400" />,
+    food: <FaUtensils className="text-pink-500 dark:text-pink-400" />,
+    shopping: <FaShoppingCart className="text-purple-600 dark:text-purple-400" />,
+    transport: <FaCar className="text-blue-600 dark:text-blue-400" />,
   };
 
   // Fetch transactions
@@ -111,8 +111,7 @@ const MyTransactions = () => {
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div
             key={i}
-            className="h-40 rounded-2xl bg-gradient-to-r from-pink-100 via-pink-50 to-pink-100 
-            animate-pulse"
+            className="h-40 rounded-2xl bg-gradient-to-r from-pink-100 via-pink-50 to-pink-100 animate-pulse dark:from-gray-700 dark:via-gray-800 dark:to-gray-700"
           ></div>
         ))}
       </div>
@@ -120,12 +119,9 @@ const MyTransactions = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFE4EC] via-[#FDF2F8] to-[#E3F2FD] p-6">
-
+    <div className="min-h-screen bg-gradient-to-br from-[#FFE4EC] via-[#FDF2F8] to-[#E3F2FD] dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6">
       <h2
-        className="text-4xl font-extrabold text-center 
-        bg-gradient-to-r from-pink-600 via-rose-500 to-blue-600 
-        bg-clip-text text-transparent mb-10"
+        className="text-4xl font-extrabold text-center bg-gradient-to-r from-pink-600 via-rose-500 to-blue-600 bg-clip-text text-transparent mb-10"
       >
         My Transactions
       </h2>
@@ -140,7 +136,7 @@ const MyTransactions = () => {
             className={`px-4 py-2 rounded-full shadow ${
               filterType === "all"
                 ? "bg-pink-600 text-white"
-                : "bg-white/80 backdrop-blur text-gray-700"
+                : "bg-white/80 backdrop-blur text-gray-700 dark:bg-gray-800 dark:text-gray-200"
             }`}
           >
             All
@@ -151,7 +147,7 @@ const MyTransactions = () => {
             className={`px-4 py-2 rounded-full shadow ${
               filterType === "income"
                 ? "bg-green-600 text-white"
-                : "bg-white/80 backdrop-blur"
+                : "bg-white/80 backdrop-blur dark:bg-gray-800 dark:text-gray-200"
             }`}
           >
             Income
@@ -162,7 +158,7 @@ const MyTransactions = () => {
             className={`px-4 py-2 rounded-full shadow ${
               filterType === "expense"
                 ? "bg-red-600 text-white"
-                : "bg-white/80 backdrop-blur"
+                : "bg-white/80 backdrop-blur dark:bg-gray-800 dark:text-gray-200"
             }`}
           >
             Expense
@@ -173,7 +169,7 @@ const MyTransactions = () => {
         <div className="flex gap-3">
           <select
             onChange={(e) => handleSort(e.target.value)}
-            className="px-4 py-2 rounded-xl bg-white shadow"
+            className="px-4 py-2 rounded-xl bg-white shadow dark:bg-gray-800 dark:text-gray-200"
           >
             <option value="">Sort By</option>
             <option value="high">Amount: High → Low</option>
@@ -192,7 +188,7 @@ const MyTransactions = () => {
             alt="empty"
             className="h-56 opacity-80"
           />
-          <p className="text-gray-500 text-xl mt-4">No transactions found</p>
+          <p className="text-gray-500 dark:text-gray-300 text-xl mt-4">No transactions found</p>
         </div>
       )}
 
@@ -201,8 +197,7 @@ const MyTransactions = () => {
         {filtered.map((t) => (
           <div
             key={t._id}
-            className="p-6 bg-white/70 backdrop-blur-xl rounded-2xl shadow
-            border border-pink-100 hover:shadow-xl hover:scale-[1.02] transition"
+            className="p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow border border-pink-100 dark:border-gray-700 hover:shadow-xl hover:scale-[1.02] transition"
           >
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-bold capitalize bg-gradient-to-r from-blue-600 to-pink-500 bg-clip-text text-transparent">
@@ -210,42 +205,42 @@ const MyTransactions = () => {
               </h3>
 
               <div className="text-2xl">
-                {categoryIcons[t.category] || <FaTags className="text-gray-500" />}
+                {categoryIcons[t.category] || <FaTags className="text-gray-500 dark:text-gray-400" />}
               </div>
             </div>
 
-            <p className="text-gray-700 mt-2">
-              <span className="font-medium text-pink-600">Category:</span>{" "}
+            <p className="text-gray-700 dark:text-gray-300 mt-2">
+              <span className="font-medium text-pink-600 dark:text-pink-400">Category:</span>{" "}
               {t.category}
             </p>
 
-            <p className="text-gray-700">
-              <span className="font-medium text-pink-600">Amount:</span> ${t.amount}
+            <p className="text-gray-700 dark:text-gray-300">
+              <span className="font-medium text-pink-600 dark:text-pink-400">Amount:</span> ${t.amount}
             </p>
 
-            <p className="text-gray-700">
-              <span className="font-medium text-pink-600">Date:</span>{" "}
+            <p className="text-gray-700 dark:text-gray-300">
+              <span className="font-medium text-pink-600 dark:text-pink-400">Date:</span>{" "}
               {new Date(t.date).toLocaleDateString()}
             </p>
 
             <div className="flex justify-between mt-5">
               <Link
                 to={`/transaction/${t._id}`}
-                className="px-4 py-2 rounded-full bg-blue-500 text-white hover:shadow-lg hover:scale-105 transition"
+                className="px-4 py-2 rounded-full bg-blue-500 dark:bg-blue-600 text-white hover:shadow-lg hover:scale-105 transition"
               >
                 View
               </Link>
 
               <Link
                 to={`/transaction/update/${t._id}`}
-                className="px-4 py-2 rounded-full bg-green-500 text-white hover:shadow-lg hover:scale-105 transition"
+                className="px-4 py-2 rounded-full bg-green-500 dark:bg-green-600 text-white hover:shadow-lg hover:scale-105 transition"
               >
                 Edit
               </Link>
 
               <button
                 onClick={() => handleDelete(t._id)}
-                className="px-4 py-2 rounded-full bg-red-500 text-white hover:shadow-lg hover:scale-105 transition"
+                className="px-4 py-2 rounded-full bg-red-500 dark:bg-red-600 text-white hover:shadow-lg hover:scale-105 transition"
               >
                 Delete
               </button>

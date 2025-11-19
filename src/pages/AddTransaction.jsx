@@ -2,9 +2,11 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
+import useTheme from "../pages/useTheme"; // ⬅ global theme hook
 
 const AddTransaction = () => {
   const { user } = useContext(AuthContext);
+  const { theme } = useTheme(); // ⬅ dark/light mode
 
   const [formData, setFormData] = useState({
     type: "",
@@ -23,7 +25,6 @@ const AddTransaction = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.post("http://localhost:3000/transactions", formData);
 
@@ -56,15 +57,17 @@ const AddTransaction = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-8 rounded-2xl shadow-lg border
-                    bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50
-                    text-gray-800">
-      <h2 className="text-3xl font-semibold mb-6 text-center text-blue-700">
+    <div
+      className={`max-w-xl mx-auto mt-10 p-8 rounded-2xl shadow-lg border
+        transition-colors duration-500
+        ${theme === "dark" ? "bg-gray-900 text-gray-200 border-gray-700" : "bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 text-gray-800 border-pink-100"}
+      `}
+    >
+      <h2 className={`text-3xl font-semibold mb-6 text-center ${theme === "dark" ? "text-blue-400" : "text-blue-700"}`}>
         Add New Transaction
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {/* Type */}
         <div>
           <label className="font-medium">Type</label>
@@ -73,7 +76,9 @@ const AddTransaction = () => {
             value={formData.type}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+            `}
           >
             <option value="">Select Type</option>
             <option value="income">Income</option>
@@ -89,7 +94,9 @@ const AddTransaction = () => {
             value={formData.category}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+            `}
           >
             <option value="">Select Category</option>
             <option value="home">Home</option>
@@ -110,7 +117,9 @@ const AddTransaction = () => {
             value={formData.amount}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+            `}
           />
         </div>
 
@@ -121,7 +130,9 @@ const AddTransaction = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full mt-1 p-2 border rounded"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+            `}
           ></textarea>
         </div>
 
@@ -134,7 +145,9 @@ const AddTransaction = () => {
             value={formData.date}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+            `}
           />
         </div>
 
@@ -145,7 +158,9 @@ const AddTransaction = () => {
             type="email"
             value={formData.email}
             readOnly
-            className="w-full mt-1 p-2 border rounded bg-gray-100"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-700 text-gray-300 border-gray-600" : "bg-gray-100 text-gray-800 border-gray-300"}
+            `}
           />
         </div>
 
@@ -156,13 +171,17 @@ const AddTransaction = () => {
             type="text"
             value={formData.name}
             readOnly
-            className="w-full mt-1 p-2 border rounded bg-gray-100"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              ${theme === "dark" ? "bg-gray-700 text-gray-300 border-gray-600" : "bg-gray-100 text-gray-800 border-gray-300"}
+            `}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700"
+          className={`w-full font-semibold py-2 rounded-lg transition-colors duration-300
+            ${theme === "dark" ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}
+          `}
         >
           Add Transaction
         </button>

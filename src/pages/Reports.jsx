@@ -10,6 +10,7 @@ import {
   LinearScale,
   BarElement,
 } from "chart.js";
+import useTheme from "../pages/useTheme";
 
 ChartJS.register(
   ArcElement,
@@ -21,6 +22,7 @@ ChartJS.register(
 );
 
 const Reports = () => {
+  const { theme } = useTheme(); // ⬅ dark/light mode
   const [transactions, setTransactions] = useState([]);
   const [monthFilter, setMonthFilter] = useState("");
 
@@ -64,7 +66,7 @@ const Reports = () => {
           "#a78bfa", // purple
           "#fb7185", // rose
         ],
-        borderColor: "#ffffff",
+        borderColor: theme === "dark" ? "#1f2937" : "#ffffff",
         borderWidth: 1,
       },
     ],
@@ -74,14 +76,14 @@ const Reports = () => {
     plugins: {
       legend: {
         labels: {
-          color: "#374151",
+          color: theme === "dark" ? "#e5e7eb" : "#374151",
           font: { size: 14 },
         },
       },
       tooltip: {
-        titleColor: "#000000",
-        bodyColor: "#000000",
-        backgroundColor: "#f9fafb",
+        titleColor: theme === "dark" ? "#f3f4f6" : "#000000",
+        bodyColor: theme === "dark" ? "#f3f4f6" : "#000000",
+        backgroundColor: theme === "dark" ? "#374151" : "#f9fafb",
       },
     },
   };
@@ -109,32 +111,35 @@ const Reports = () => {
     plugins: {
       legend: {
         labels: {
-          color: "#374151",
+          color: theme === "dark" ? "#e5e7eb" : "#374151",
           font: { size: 14 },
         },
       },
       tooltip: {
-        titleColor: "#000000",
-        bodyColor: "#000000",
-        backgroundColor: "#f9fafb",
+        titleColor: theme === "dark" ? "#f3f4f6" : "#000000",
+        bodyColor: theme === "dark" ? "#f3f4f6" : "#000000",
+        backgroundColor: theme === "dark" ? "#374151" : "#f9fafb",
       },
     },
     scales: {
       x: {
-        ticks: { color: "#374151" },
-        grid: { color: "rgba(0,0,0,0.05)" },
+        ticks: { color: theme === "dark" ? "#e5e7eb" : "#374151" },
+        grid: { color: theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" },
       },
       y: {
-        ticks: { color: "#374151" },
-        grid: { color: "rgba(0,0,0,0.05)" },
+        ticks: { color: theme === "dark" ? "#e5e7eb" : "#374151" },
+        grid: { color: theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" },
       },
     },
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 p-8 text-gray-800">
+    <div
+      className={`min-h-screen w-full p-8 transition-colors duration-500
+        ${theme === "dark" ? "bg-gray-900 text-gray-200" : "bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 text-gray-800"}`}
+    >
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
+        <h1 className={`text-4xl font-bold text-center mb-8 ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
           Financial Reports
         </h1>
 
@@ -142,7 +147,8 @@ const Reports = () => {
         <div className="flex justify-center mb-8">
           <select
             onChange={(e) => setMonthFilter(e.target.value)}
-            className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-gray-800 shadow-sm focus:outline-none"
+            className={`px-4 py-2 rounded-xl shadow-sm focus:outline-none border transition-colors duration-500
+              ${theme === "dark" ? "bg-gray-700 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}`}
           >
             <option value="">Filter by Month</option>
             <option value="1">January</option>
@@ -163,16 +169,22 @@ const Reports = () => {
         {/* CHARTS */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* PIE CHART CARD */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-200 transition hover:scale-[1.02] hover:shadow-2xl">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          <div
+            className={`p-6 rounded-2xl shadow-xl border transition hover:scale-[1.02] hover:shadow-2xl
+              ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+          >
+            <h2 className={`text-xl font-semibold mb-4 ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
               Category Breakdown
             </h2>
             <Pie data={pieData} options={pieOptions} />
           </div>
 
           {/* BAR CHART CARD */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-200 transition hover:scale-[1.02] hover:shadow-2xl">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          <div
+            className={`p-6 rounded-2xl shadow-xl border transition hover:scale-[1.02] hover:shadow-2xl
+              ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
+          >
+            <h2 className={`text-xl font-semibold mb-4 ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
               Monthly Totals
             </h2>
             <Bar data={barData} options={barOptions} />
