@@ -4,9 +4,13 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
 import useTheme from "../pages/useTheme"; // ⬅ global theme hook
 
+const image_hosting_key = import.meta.env.VITE_IMGBB_KEY; 
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
 const AddTransaction = () => {
   const { user } = useContext(AuthContext);
   const { theme } = useTheme(); // ⬅ dark/light mode
+  const [loading, setLoading] = useState(false); // সাবমিট লোডিং স্টেট
 
   const [formData, setFormData] = useState({
     type: "",
@@ -25,10 +29,41 @@ const AddTransaction = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:3000/transactions", formData);
+    setLoading(true);
 
-      if (res.data.insertedId) {
+    const form = e.target;
+    const imageFile = form.image.files[0];
+
+    try {
+      let imageUrl = "";
+
+      // ১. যদি ইমেজ সিলেক্ট করা থাকে তবে ImgBB-তে আপলোড হবে
+      if (imageFile) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", imageFile);
+
+        const res = await axios.post(image_hosting_api, imageFormData, {
+          headers: { "content-type": "multipart/form-data" },
+        });
+
+        if (res.data.success) {
+          imageUrl = res.data.data.display_url;
+        }
+      }
+
+      // ২. এবার সব ডাটা এবং ইমেজের লিঙ্ক একসাথে ব্যাকএন্ডে পাঠান
+      const finalData = { 
+        ...formData, 
+        amount: Number(formData.amount), 
+        image: imageUrl 
+      };
+
+      const response = await axios.post(
+        "https://personal-project-k.vercel.app/transactions",
+        finalData
+      );
+
+      if (response.data.insertedId) {
         Swal.fire({
           title: "Success!",
           text: "Transaction added successfully.",
@@ -36,6 +71,8 @@ const AddTransaction = () => {
           confirmButtonText: "OK",
         });
 
+        // ফর্ম রিসেট করা
+        form.reset();
         setFormData({
           type: "",
           category: "",
@@ -53,6 +90,8 @@ const AddTransaction = () => {
         text: "Failed to add transaction.",
         icon: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,10 +99,18 @@ const AddTransaction = () => {
     <div
       className={`max-w-xl mx-auto mt-10 p-8 rounded-2xl shadow-lg border
         transition-colors duration-500
-        ${theme === "dark" ? "bg-gray-900 text-gray-200 border-gray-700" : "bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 text-gray-800 border-pink-100"}
+        ${
+          theme === "dark"
+            ? "bg-gray-900 text-gray-200 border-gray-700"
+            : "bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 text-gray-800 border-pink-100"
+        }
       `}
     >
-      <h2 className={`text-3xl font-semibold mb-6 text-center ${theme === "dark" ? "text-blue-400" : "text-blue-700"}`}>
+      <h2
+        className={`text-3xl font-semibold mb-6 text-center ${
+          theme === "dark" ? "text-blue-400" : "text-blue-700"
+        }`}
+      >
         Add New Transaction
       </h2>
 
@@ -77,7 +124,11 @@ const AddTransaction = () => {
             onChange={handleChange}
             required
             className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+              ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-200 border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              }
             `}
           >
             <option value="">Select Type</option>
@@ -95,7 +146,11 @@ const AddTransaction = () => {
             onChange={handleChange}
             required
             className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+              ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-200 border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              }
             `}
           >
             <option value="">Select Category</option>
@@ -118,7 +173,11 @@ const AddTransaction = () => {
             onChange={handleChange}
             required
             className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+              ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-200 border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              }
             `}
           />
         </div>
@@ -131,7 +190,11 @@ const AddTransaction = () => {
             value={formData.description}
             onChange={handleChange}
             className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+              ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-200 border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              }
             `}
           ></textarea>
         </div>
@@ -146,12 +209,35 @@ const AddTransaction = () => {
             onChange={handleChange}
             required
             className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}
+              ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-200 border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              }
             `}
           />
         </div>
 
-        {/* User Email */}
+        {/* Image Input (নতুন যোগ করা হয়েছে) */}
+        <div>
+          <label className="font-medium">Transaction Receipt / Image (Optional)</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
+              file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 
+              file:text-sm file:font-semibold
+              ${
+                theme === "dark"
+                  ? "bg-gray-800 text-gray-200 border-gray-600 file:bg-gray-700 file:text-blue-400"
+                  : "bg-white text-gray-800 border-gray-300 file:bg-blue-50 file:text-blue-700"
+              }
+            `}
+          />
+        </div>
+
+        {/* User Email (Read Only) */}
         <div>
           <label className="font-medium">User Email</label>
           <input
@@ -159,31 +245,27 @@ const AddTransaction = () => {
             value={formData.email}
             readOnly
             className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-700 text-gray-300 border-gray-600" : "bg-gray-100 text-gray-800 border-gray-300"}
-            `}
-          />
-        </div>
-
-        {/* User Name */}
-        <div>
-          <label className="font-medium">User Name</label>
-          <input
-            type="text"
-            value={formData.name}
-            readOnly
-            className={`w-full mt-1 p-2 rounded border transition-colors duration-300
-              ${theme === "dark" ? "bg-gray-700 text-gray-300 border-gray-600" : "bg-gray-100 text-gray-800 border-gray-300"}
+              ${
+                theme === "dark"
+                  ? "bg-gray-700 text-gray-300 border-gray-600"
+                  : "bg-gray-100 text-gray-800 border-gray-300"
+              }
             `}
           />
         </div>
 
         <button
           type="submit"
+          disabled={loading}
           className={`w-full font-semibold py-2 rounded-lg transition-colors duration-300
-            ${theme === "dark" ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}
+            ${
+              loading 
+                ? "bg-gray-400 cursor-not-allowed" 
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }
           `}
         >
-          Add Transaction
+          {loading ? "Processing..." : "Add Transaction"}
         </button>
       </form>
     </div>

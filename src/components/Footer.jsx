@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import useTheme from "../pages/useTheme";
 
 const Footer = () => {
-  const { theme, toggleTheme } = useTheme(); // ⬅ using global theme hook
+  const { theme, toggleTheme } = useTheme(); 
 
   // Determine main text color
   const mainTextColor = theme === "dark" ? "text-gray-400" : "text-gray-700";
@@ -37,8 +37,8 @@ const Footer = () => {
           {/* Contact */}
           <div className="flex flex-col gap-2">
             <h3 className={`font-semibold text-lg ${mainTextColor}`}>Contact Us</h3>
-            <p className={mainTextColor}>Email: support@finease.com</p>
-            <p className={mainTextColor}>Phone: +880 1234 567890</p>
+            <p className={mainTextColor}>Email: proff.kona@gmail.com</p>
+            <p className={mainTextColor}>Phone: +8801796589899</p>
             <p className={mainTextColor}>Address: 123 Finance Street, Dhaka, Bangladesh</p>
           </div>
 

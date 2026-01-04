@@ -22,7 +22,9 @@ const UpdateTransaction = () => {
   // Fetch transaction data
   const fetchTransaction = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/transactions/${id}`);
+      const res = await axios.get(
+        `https://personal-project-k.vercel.app/transactions/${id}`
+      );
       setTransaction({
         type: res.data.type,
         description: res.data.description,
@@ -49,11 +51,14 @@ const UpdateTransaction = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:3000/transactions/${id}`, {
-        ...transaction,
-        amount: Number(transaction.amount),
-        date: transaction.date,
-      });
+      await axios.patch(
+        `https://personal-project-k.vercel.app/transactions/${id}`,
+        {
+          ...transaction,
+          amount: Number(transaction.amount),
+          date: transaction.date,
+        }
+      );
 
       Swal.fire({
         icon: "success",
@@ -83,12 +88,16 @@ const UpdateTransaction = () => {
   return (
     <div
       className={`min-h-screen flex items-center justify-center p-6 transition-colors duration-500 ${
-        theme === "dark" ? "bg-gray-900 text-gray-200" : "bg-gradient-to-br from-purple-200 via-pink-200 to-yellow-100 text-gray-800"
+        theme === "dark"
+          ? "bg-gray-900 text-gray-200"
+          : "bg-gradient-to-br from-purple-200 via-pink-200 to-yellow-100 text-gray-800"
       }`}
     >
       <div
         className={`w-full max-w-xl p-8 rounded-2xl shadow-2xl transition-colors duration-500 ${
-          theme === "dark" ? "bg-gray-800/70 border-gray-700" : "bg-white/90 backdrop-blur-md border-white/50"
+          theme === "dark"
+            ? "bg-gray-800/70 border-gray-700"
+            : "bg-white/90 backdrop-blur-md border-white/50"
         }`}
       >
         <h2 className="text-3xl font-extrabold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-pink-400 to-yellow-500">

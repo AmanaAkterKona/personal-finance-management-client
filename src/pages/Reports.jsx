@@ -22,13 +22,15 @@ ChartJS.register(
 );
 
 const Reports = () => {
-  const { theme } = useTheme(); // ⬅ dark/light mode
+  const { theme } = useTheme(); 
   const [transactions, setTransactions] = useState([]);
   const [monthFilter, setMonthFilter] = useState("");
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/transactions");
+      const res = await axios.get(
+        "https://personal-project-k.vercel.app/transactions"
+      );
       setTransactions(res.data);
     } catch (err) {
       console.error("Error fetching transactions:", err);
@@ -39,56 +41,33 @@ const Reports = () => {
     fetchData();
   }, []);
 
-  // Filter by month
   const filteredData = monthFilter
     ? transactions.filter(
         (t) => new Date(t.date).getMonth() + 1 === Number(monthFilter)
       )
     : transactions;
 
-  // Category totals for pie chart
   const categoryTotals = {};
   filteredData.forEach((t) => {
     if (!categoryTotals[t.category]) categoryTotals[t.category] = 0;
     categoryTotals[t.category] += Number(t.amount);
   });
 
+  // চার্টের জন্য মডার্ন কালার প্যালেট
+  const chartColors = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#3b82f6"];
+
   const pieData = {
     labels: Object.keys(categoryTotals),
     datasets: [
       {
         data: Object.values(categoryTotals),
-        backgroundColor: [
-          "#fbbf24", // yellow
-          "#60a5fa", // blue
-          "#34d399", // green
-          "#f472b6", // pink
-          "#a78bfa", // purple
-          "#fb7185", // rose
-        ],
-        borderColor: theme === "dark" ? "#1f2937" : "#ffffff",
-        borderWidth: 1,
+        backgroundColor: chartColors,
+        borderColor: theme === "dark" ? "#1e293b" : "#ffffff", 
+        borderWidth: 3,
       },
     ],
   };
 
-  const pieOptions = {
-    plugins: {
-      legend: {
-        labels: {
-          color: theme === "dark" ? "#e5e7eb" : "#374151",
-          font: { size: 14 },
-        },
-      },
-      tooltip: {
-        titleColor: theme === "dark" ? "#f3f4f6" : "#000000",
-        bodyColor: theme === "dark" ? "#f3f4f6" : "#000000",
-        backgroundColor: theme === "dark" ? "#374151" : "#f9fafb",
-      },
-    },
-  };
-
-  // Monthly totals for bar chart
   const monthlyTotals = {};
   transactions.forEach((t) => {
     const month = new Date(t.date).getMonth() + 1;
@@ -100,94 +79,87 @@ const Reports = () => {
     labels: Object.keys(monthlyTotals).map((m) => `Month ${m}`),
     datasets: [
       {
-        label: "Total Amount",
+        label: "Transactions",
         data: Object.values(monthlyTotals),
-        backgroundColor: "#60a5fa",
+        backgroundColor: "#6366f1",
+        borderRadius: 10,
+        hoverBackgroundColor: "#4f46e5",
       },
     ],
   };
 
-  const barOptions = {
-    plugins: {
-      legend: {
-        labels: {
-          color: theme === "dark" ? "#e5e7eb" : "#374151",
-          font: { size: 14 },
-        },
-      },
-      tooltip: {
-        titleColor: theme === "dark" ? "#f3f4f6" : "#000000",
-        bodyColor: theme === "dark" ? "#f3f4f6" : "#000000",
-        backgroundColor: theme === "dark" ? "#374151" : "#f9fafb",
-      },
-    },
-    scales: {
-      x: {
-        ticks: { color: theme === "dark" ? "#e5e7eb" : "#374151" },
-        grid: { color: theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" },
-      },
-      y: {
-        ticks: { color: theme === "dark" ? "#e5e7eb" : "#374151" },
-        grid: { color: theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" },
-      },
-    },
-  };
+  // মডার্ন কার্ড স্টাইল
+  const commonCardClass = `p-6 rounded-3xl border transition-all duration-500 hover:shadow-xl hover:-translate-y-1 ${
+    theme === "dark" 
+      ? "bg-slate-800/50 border-slate-700/50 backdrop-blur-md text-white shadow-2xl" 
+      : "bg-white border-slate-100 text-slate-800 shadow-lg shadow-slate-100"
+  }`;
 
   return (
-    <div
-      className={`min-h-screen w-full p-8 transition-colors duration-500
-        ${theme === "dark" ? "bg-gray-900 text-gray-200" : "bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 text-gray-800"}`}
-    >
-      <div className="max-w-6xl mx-auto">
-        <h1 className={`text-4xl font-bold text-center mb-8 ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
-          Financial Reports
-        </h1>
+    <div className="w-full space-y-10 pb-10">
+      {/* HEADER SECTION */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <h1 className={`text-3xl font-extrabold tracking-tight ${theme === "dark" ? "text-white" : "text-slate-900"}`}>
+            Financial <span className="text-indigo-500">Analytics</span>
+          </h1>
+          <p className={`text-sm mt-1 font-medium ${theme === "dark" ? "text-slate-400" : "text-slate-500"}`}>
+            Deep dive into your transaction history and trends.
+          </p>
+        </div>
+        
+        <select
+          onChange={(e) => setMonthFilter(e.target.value)}
+          className={`px-5 py-2.5 rounded-2xl border-2 outline-none text-sm font-semibold transition-all cursor-pointer
+            ${theme === "dark" ? "bg-slate-800 border-slate-700 text-slate-200 focus:border-indigo-500" : "bg-white border-slate-100 text-slate-600 shadow-sm focus:border-indigo-300"}`}
+        >
+          <option value="">Yearly Overview</option>
+          {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((m, i) => (
+            <option key={m} value={i + 1}>{m}</option>
+          ))}
+        </select>
+      </div>
 
-        {/* FILTER SECTION */}
-        <div className="flex justify-center mb-8">
-          <select
-            onChange={(e) => setMonthFilter(e.target.value)}
-            className={`px-4 py-2 rounded-xl shadow-sm focus:outline-none border transition-colors duration-500
-              ${theme === "dark" ? "bg-gray-700 text-gray-200 border-gray-600" : "bg-white text-gray-800 border-gray-300"}`}
-          >
-            <option value="">Filter by Month</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-          </select>
+      {/* STATS AREA - Gradient Border Style */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {[
+          { label: "Total Volume", value: `$${Object.values(categoryTotals).reduce((a, b) => a + b, 0).toLocaleString()}`, color: "from-indigo-500 to-blue-500" },
+          { label: "Total Records", value: filteredData.length, color: "from-fuchsia-500 to-pink-500" },
+          { label: "Avg. Amount", value: `$${filteredData.length > 0 ? (Object.values(categoryTotals).reduce((a, b) => a + b, 0) / filteredData.length).toFixed(0) : 0}`, color: "from-emerald-500 to-teal-500" }
+        ].map((stat, i) => (
+          <div key={i} className={commonCardClass}>
+            <div className={`w-12 h-1.5 rounded-full bg-gradient-to-r ${stat.color} mb-4`}></div>
+            <p className="text-xs uppercase tracking-[0.15em] text-slate-500 font-bold mb-1">{stat.label}</p>
+            <p className="text-4xl font-black tracking-tight">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* CHARTS AREA */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        {/* PIE CHART CARD */}
+        <div className={commonCardClass}>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-lg font-bold tracking-tight">Category Distribution</h2>
+            <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+            </div>
+          </div>
+          <div className="h-[350px]">
+            <Pie data={pieData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 25, color: theme === 'dark' ? '#94a3b8' : '#64748b' } } } }} />
+          </div>
         </div>
 
-        {/* CHARTS */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* PIE CHART CARD */}
-          <div
-            className={`p-6 rounded-2xl shadow-xl border transition hover:scale-[1.02] hover:shadow-2xl
-              ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
-          >
-            <h2 className={`text-xl font-semibold mb-4 ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
-              Category Breakdown
-            </h2>
-            <Pie data={pieData} options={pieOptions} />
+        {/* BAR CHART CARD */}
+        <div className={commonCardClass}>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-lg font-bold tracking-tight">Monthly Performance</h2>
+            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            </div>
           </div>
-
-          {/* BAR CHART CARD */}
-          <div
-            className={`p-6 rounded-2xl shadow-xl border transition hover:scale-[1.02] hover:shadow-2xl
-              ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
-          >
-            <h2 className={`text-xl font-semibold mb-4 ${theme === "dark" ? "text-gray-100" : "text-gray-800"}`}>
-              Monthly Totals
-            </h2>
-            <Bar data={barData} options={barOptions} />
+          <div className="h-[350px]">
+            <Bar data={barData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { display: false }, ticks: { color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { color: '#94a3b8' } } } }} />
           </div>
         </div>
       </div>
