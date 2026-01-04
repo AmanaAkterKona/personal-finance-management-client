@@ -1,16 +1,18 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom"; // ⬅ Import useNavigate
 import { AuthContext } from "../contexts/AuthContext";
-import useTheme from "../pages/useTheme"; // ⬅ global theme hook
+import useTheme from "../pages/useTheme";
 
 const image_hosting_key = import.meta.env.VITE_IMGBB_KEY; 
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const AddTransaction = () => {
   const { user } = useContext(AuthContext);
-  const { theme } = useTheme(); // ⬅ dark/light mode
-  const [loading, setLoading] = useState(false); // সাবমিট লোডিং স্টেট
+  const { theme } = useTheme();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // ⬅ Initialize navigate
 
   const [formData, setFormData] = useState({
     type: "",
@@ -37,7 +39,6 @@ const AddTransaction = () => {
     try {
       let imageUrl = "";
 
-      // ১. যদি ইমেজ সিলেক্ট করা থাকে তবে ImgBB-তে আপলোড হবে
       if (imageFile) {
         const imageFormData = new FormData();
         imageFormData.append("image", imageFile);
@@ -51,7 +52,6 @@ const AddTransaction = () => {
         }
       }
 
-      // ২. এবার সব ডাটা এবং ইমেজের লিঙ্ক একসাথে ব্যাকএন্ডে পাঠান
       const finalData = { 
         ...formData, 
         amount: Number(formData.amount), 
@@ -64,14 +64,14 @@ const AddTransaction = () => {
       );
 
       if (response.data.insertedId) {
-        Swal.fire({
+        await Swal.fire({
           title: "Success!",
           text: "Transaction added successfully.",
           icon: "success",
           confirmButtonText: "OK",
         });
 
-        // ফর্ম রিসেট করা
+        // ফর্ম রিসেট
         form.reset();
         setFormData({
           type: "",
@@ -82,6 +82,9 @@ const AddTransaction = () => {
           email: user?.email,
           name: user?.displayName,
         });
+
+        // ⬅ Success এর পরে MyTransactions page এ redirect
+        navigate("/dashboard/transactions");
       }
     } catch (err) {
       console.log(err);
@@ -218,7 +221,7 @@ const AddTransaction = () => {
           />
         </div>
 
-        {/* Image Input (নতুন যোগ করা হয়েছে) */}
+        {/* Image Input */}
         <div>
           <label className="font-medium">Transaction Receipt / Image (Optional)</label>
           <input
@@ -237,7 +240,7 @@ const AddTransaction = () => {
           />
         </div>
 
-        {/* User Email (Read Only) */}
+        {/* User Email */}
         <div>
           <label className="font-medium">User Email</label>
           <input

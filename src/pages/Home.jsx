@@ -8,6 +8,8 @@ import FeaturedSection from "./FeaturedSection";
 import FAQSection from "./FAQSection";
 import BlogSection from "./BlogSection";
 
+import ActivityInsights from "./ActivityInsights";
+
 const Home = () => {
   const { user } = useContext(AuthContext); // logged-in user
   const { theme } = useTheme(); // ⬅ dark/light mode
@@ -180,46 +182,71 @@ const Home = () => {
           </div>
         </div>
       </section>
-          <BlogSection></BlogSection>
+      <BlogSection></BlogSection>
       <FeaturedSection></FeaturedSection>
-     
+      <ActivityInsights></ActivityInsights>
       <FAQSection></FAQSection>
-      {/* Budgeting Tips */}
-      <section
-        className={`py-20 px-6 md:px-32 text-center transition-colors duration-500
-        ${
-          theme === "dark"
-            ? "bg-gray-900 text-gray-200"
-            : "bg-white text-gray-800"
-        }
-      `}
-      >
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">Budgeting Tips</h2>
-        <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-          Create a realistic budget, track your expenses, save for emergencies,
-          and avoid unnecessary debt. Small steps today lead to financial
-          stability tomorrow.
-        </p>
-      </section>
+{/* Budgeting Tips */}
+<section
+  className={`py-20 px-6 md:px-32 text-center transition-colors duration-500
+    ${
+      theme === "dark"
+        ? "bg-slate-900 text-gray-200"
+        : "bg-slate-50 text-gray-800"
+    }
+  `}
+>
+  <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white">
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
+      Budgeting Tips
+    </span>
+  </h2>
 
-      {/* Why Financial Planning */}
-      <section
-        className={`py-20 px-6 md:px-32 text-center transition-colors duration-500
-        ${
-          theme === "dark"
-            ? "bg-gray-800 text-gray-200"
-            : "bg-gray-50 text-gray-800"
-        }
-      `}
-      >
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          Why Financial Planning Matters
-        </h2>
-        <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-          Planning your finances ensures that you are prepared for the future,
-          can achieve your goals, and live stress-free without money worries.
-        </p>
-      </section>
+  <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed text-slate-700 dark:text-slate-300">
+    Create a realistic budget, track your expenses, save for{" "}
+    <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+      emergencies
+    </span>
+    , and avoid unnecessary debt. Small steps today lead to{" "}
+    <span className="font-semibold text-purple-600 dark:text-purple-400">
+      financial stability
+    </span>{" "}
+    tomorrow.
+  </p>
+</section>
+
+{/* Why Financial Planning */}
+<section
+  className={`py-20 px-6 md:px-32 text-center transition-colors duration-500
+    ${
+      theme === "dark"
+        ? "bg-slate-950 text-gray-200"
+        : "bg-white text-gray-800"
+    }
+  `}
+>
+  <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white">
+    Why{" "}
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500">
+      Financial Planning
+    </span>{" "}
+    Matters
+  </h2>
+
+  <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed text-slate-700 dark:text-slate-300">
+    Planning your finances ensures that you are prepared for the future,
+    can achieve your{" "}
+    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+      goals
+    </span>
+    , and live{" "}
+    <span className="font-semibold text-cyan-600 dark:text-cyan-400">
+      stress-free
+    </span>{" "}
+    without money worries.
+  </p>
+</section>
+
     </div>
   );
 };
